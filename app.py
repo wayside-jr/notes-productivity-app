@@ -136,6 +136,27 @@ def get_note(id):
         "content": note.content
     }, 200
 
+# update note
+@app.route("/notes/<int:id>", methods=["PATCH"])
+def update_note(id):
+    user = get_current_user()
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    note = Note.query.get_or_404(id)
+
+    if note.user_id != user.id:
+        return {"error": "Forbidden"}, 403
+
+    data = request.get_json()
+
+    note.title = data.get("title", note.title)
+    note.content = data.get("content", note.content)
+
+    db.session.commit()
+
+    return {"message": "Note updated"}, 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
