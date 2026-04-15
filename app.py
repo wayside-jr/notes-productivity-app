@@ -98,5 +98,25 @@ def get_notes():
         "pages": notes.pages
     }, 200
 
+# create book
+@app.route("/notes", methods=["POST"])
+def create_note():
+    user = get_current_user()
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    data = request.get_json()
+
+    note = Note(
+        title=data.get("title"),
+        content=data.get("content"),
+        user_id=user.id
+    )
+
+    db.session.add(note)
+    db.session.commit()
+
+    return {"message": "Note created"}, 201
+
 if __name__ == "__main__":
     app.run(debug=True)
