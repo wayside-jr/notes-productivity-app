@@ -71,6 +71,12 @@ def me():
         "username": user.username
     }, 200
 
+# log out route
+@app.route("/logout", methods=["DELETE"])
+def logout():
+    session.pop("user_id", None)
+    return {"message": "Logged out"}, 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
