@@ -58,6 +58,19 @@ def login():
 
     return {"error": "Invalid username or password"}, 401
 
+# check profile with session
+@app.route("/me", methods=["GET"])
+def me():
+    user = get_current_user()
+
+    if not user:
+        return {"error": "Not authenticated"}, 401
+
+    return {
+        "id": user.id,
+        "username": user.username
+    }, 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
