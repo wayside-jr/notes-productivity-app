@@ -45,6 +45,19 @@ def signup():
 
     return {"message": "User created successfully"}, 201
 
+# login route
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+
+    user = User.query.filter_by(username=data.get("username")).first()
+
+    if user and user.check_password(data.get("password")):
+        session["user_id"] = user.id
+        return {"message": "Logged in successfully"}, 200
+
+    return {"error": "Invalid username or password"}, 401
+
 
 if __name__ == "__main__":
     app.run(debug=True)
