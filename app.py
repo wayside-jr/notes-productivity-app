@@ -118,5 +118,24 @@ def create_note():
 
     return {"message": "Note created"}, 201
 
+# get a single note
+@app.route("/notes/<int:id>", methods=["GET"])
+def get_note(id):
+    user = get_current_user()
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    note = Note.query.get_or_404(id)
+
+    if note.user_id != user.id:
+        return {"error": "Forbidden"}, 403
+
+    return {
+        "id": note.id,
+        "title": note.title,
+        "content": note.content
+    }, 200
+
+
 if __name__ == "__main__":
     app.run(debug=True)
