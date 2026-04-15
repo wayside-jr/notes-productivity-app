@@ -19,7 +19,7 @@ with app.app_context():
 
     db.session.commit()
 
-    print("Users ensured ✔")
+    print("Users ensured ")
 
     # Refresh users after commit (important for IDs)
     user1 = User.query.filter_by(username="john").first()
@@ -50,9 +50,9 @@ with app.app_context():
         db.session.add_all([note1, note2, note3])
         db.session.commit()
 
-        print("Notes created ✔")
+        print("Notes created ")
 
     else:
-        print("Notes already exist ✔")
+        print("Notes already exist ")
 
-    print("Seeding completed safely 🚀")
+    print("Seeding completed safely ")
