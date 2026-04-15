@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask ,request , jsonify,session
 from flask_migrate import Migrate
-from models import db, bcrypt
+from models import db, bcrypt , User , Note
 
 app = Flask(__name__)
 
@@ -12,10 +12,16 @@ db.init_app(app)
 bcrypt.init_app(app)
 migrate = Migrate(app, db)
 
+def get_current_user():
+    user_id = session.get("user_id")
+    if not user_id:
+        return None
+    return User.query.get(user_id)
 
 @app.route("/")
 def home():
     return {"message": "note productivity app"}
+
 
 if __name__ == "__main__":
     app.run(debug=True)
