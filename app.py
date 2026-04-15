@@ -157,6 +157,23 @@ def update_note(id):
 
     return {"message": "Note updated"}, 200
 
+# Delete route
+@app.route("/notes/<int:id>", methods=["DELETE"])
+def delete_note(id):
+    user = get_current_user()
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    note = Note.query.get_or_404(id)
+
+    if note.user_id != user.id:
+        return {"error": "Forbidden"}, 403
+
+    db.session.delete(note)
+    db.session.commit()
+
+    return {"message": "Note deleted"}, 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
