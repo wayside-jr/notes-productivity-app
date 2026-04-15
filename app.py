@@ -77,6 +77,26 @@ def logout():
     session.pop("user_id", None)
     return {"message": "Logged out"}, 200
 
+# get notes
+@app.route("/notes", methods=["GET"])
+def get_notes():
+    user = get_current_user()
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    page = int(request.args.get("page", 1))
+    per_page = 5
+
+    notes = Note.query.filter_by(user_id=user.id).paginate(page=page, per_page=per_page)
+
+    return {
+        "notes": [
+            {"id": n.id, "title": n.title, "content": n.content}
+            for n in notes.items
+        ],
+        "total": notes.total,
+        "pages": notes.pages
+    }, 200
 
 if __name__ == "__main__":
     app.run(debug=True)
