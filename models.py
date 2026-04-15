@@ -4,9 +4,7 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
-# ======================
-# USER MODEL
-# ======================
+
 class User(db.Model):
     __tablename__ = "users"
 
@@ -21,3 +19,14 @@ class User(db.Model):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
+
+
+
+class Note(db.Model):
+    __tablename__ = "notes"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    content = db.Column(db.Text)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
